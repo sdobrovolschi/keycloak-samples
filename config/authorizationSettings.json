@@ -1,0 +1,113 @@
+{
+  "allowRemoteResourceManagement": true,
+  "policyEnforcementMode": "ENFORCING",
+  "resources": [
+    {
+      "_id": "7ebe381d-a7de-485c-bd03-f6c5ec34de63",
+      "name": "Default Resource",
+      "type": "urn:products:resources:default",
+      "ownerManagedAccess": false,
+      "attributes": {},
+      "uris": [
+        "/*"
+      ]
+    },
+    {
+      "_id": "f4313973-e9dc-4671-8c1c-3bf34665d6c8",
+      "name": "Products Resource",
+      "ownerManagedAccess": false,
+      "attributes": {},
+      "uris": [
+        "/projects"
+      ],
+      "scopes": [
+        {
+          "name": "view"
+        },
+        {
+          "name": "create"
+        }
+      ]
+    }
+  ],
+  "policies": [
+    {
+      "id": "9532ef33-eb23-4ab3-a736-a0ff56fd489a",
+      "name": "Default Policy",
+      "description": "A policy that grants access only for users within this realm",
+      "type": "js",
+      "logic": "POSITIVE",
+      "decisionStrategy": "AFFIRMATIVE",
+      "config": {
+        "code": "// by default, grants any permission associated with this policy\n$evaluation.grant();\n"
+      }
+    },
+    {
+      "id": "1efcee91-c3ea-45e4-922f-b77cf3c14ec7",
+      "name": "Only Manager Policy",
+      "type": "role",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "roles": "[{\"id\":\"manager\",\"required\":true}]"
+      }
+    },
+    {
+      "id": "79b2e39c-0a24-4129-907d-ce960e5e0843",
+      "name": "Only Agent Policy",
+      "type": "role",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "roles": "[{\"id\":\"agent\",\"required\":true}]"
+      }
+    },
+    {
+      "id": "0f051de4-5d2d-4778-be95-282574e1a346",
+      "name": "Default Permission",
+      "description": "A permission that applies to the default resource type",
+      "type": "resource",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "defaultResourceType": "urn:products:resources:default",
+        "applyPolicies": "[\"Default Policy\"]"
+      }
+    },
+    {
+      "id": "338435dd-f251-4293-aa06-0c649aeda608",
+      "name": "View Products Resource Permission",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "resources": "[\"Products Resource\"]",
+        "scopes": "[\"view\"]",
+        "applyPolicies": "[\"Only Manager Policy\"]"
+      }
+    },
+    {
+      "id": "96486df1-c911-4945-8543-d4badc5775f7",
+      "name": "Create Projects Resource Permission",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "resources": "[\"Products Resource\"]",
+        "scopes": "[\"create\"]",
+        "applyPolicies": "[\"Only Agent Policy\"]"
+      }
+    }
+  ],
+  "scopes": [
+    {
+      "id": "ab78098e-fe7c-4690-9f32-7b85c934d7b3",
+      "name": "view"
+    },
+    {
+      "id": "34f9ab4f-0d0a-4838-aecf-50f56f421435",
+      "name": "create"
+    }
+  ],
+  "decisionStrategy": "UNANIMOUS"
+}
